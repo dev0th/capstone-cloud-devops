@@ -15,6 +15,18 @@ The goal of the project is to apply the skills and knowledge which were develope
 * Building Docker containers in pipelines
 
 ## Prerequisites
+
+To run and test the deployment locally, make sure that you have the following tools installed on your machine:
+* Java
+* Maven
+* Docker
+* kubectl
+* Minikube
+
+To deploy the application to Amazon EKS you also need the following tools:
+* AWS CLI
+* eksctl
+
 ## File Explanation
 
 <div align="left">
@@ -39,6 +51,28 @@ The goal of the project is to apply the skills and knowledge which were develope
 * Access running application at http://localhost:8080
 
 ### Run application in Docker
+
+* Build docker image and run
+    ``` bash
+    ./run_docker.sh
+    ```
+* Access running application at http://localhost:8080
+* Upload your docker image to DockerHub by running
+    ``` bash
+    ./upload_docker.sh
+    ```
+  Substitute the dockerPath with the path to your DockerHub repository
+
 ### Run application in Kubernetes with minikube
+
+* Make sure, you have uploaded your docker image to DockerHub by running
+    ``` bash
+    ./upload_docker.sh
+    ```
+* Run
+    ``` bash
+    ./run_kubernetes.sh
+    ```
+  to deploy the application to minikube cluster
 ### Run application in Amazon Elastic Kubernetes Service (EKS)
 
