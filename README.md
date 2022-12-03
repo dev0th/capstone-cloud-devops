@@ -34,7 +34,7 @@ The goal of the project is to apply the skills and knowledge which were develope
 
 * Build and run
     ``` bash
-    mvn springboot:run
+    mvn clean spring-boot:run
     ```
 * Access running application at http://localhost:8080
 
