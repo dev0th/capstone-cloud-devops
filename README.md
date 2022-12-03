@@ -39,6 +39,9 @@ To deploy the application to Amazon EKS you also need the following tools:
 - `deployment/deployment.yml`: file with declarative updates to application that is deployed to kubernetes cluster
 - `deployment/secret.yml`: file that stores and manages sensitive information for the application, such as tokens, keys and passwords
 - `deployment/service.yml`: file that defines service to be deployed to kubernetes cluster
+- `run_docker.sh`: script file to build an image from Dockerfile and run a docker container locally
+- `run_kubernetes:sh`: script file to run on Kubernetes locally with minikube
+- `upload_docker.sh`: script file to tag a local docker image and push it to docker hub
 
 ## How to Run
 
@@ -76,3 +79,16 @@ To deploy the application to Amazon EKS you also need the following tools:
   to deploy the application to minikube cluster
 ### Run application in Amazon Elastic Kubernetes Service (EKS)
 
+To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI tool. It uses AWS CloudFormation to provision and configure resources for Amazon EKS clusters and node groups. Make sure, you installed kubectl and eksctl on your machine and configured IAM permissions for your user to work with Amazon EKS. Then, run the following command:
+``` bash
+./create_eks_cluster.sh
+```
+
+#### Setup Jenkins Server
+* Create EC2 instance with Ubuntu Server 18.04/20.04 LTS. Make sure that SSH port 22 and Jenkins port 8080 are open for access
+* On your EC2 instance, install Java 8/Java 11 and verify your installation
+    ``` bash
+    sudo apt-get update
+    sudo apt-get install openjdk-8-jdk
+    java --version
+    ```
