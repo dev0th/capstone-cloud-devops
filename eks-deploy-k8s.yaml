@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dev0th-app
+  name: dev0th-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dev0th-app
+  template:
+    metadata:
+      labels:
+        app: dev0th-app
+    spec:
+      containers:
+        - name: dev0th-container
+          image: 310224694309.dkr.ecr.us-west-2.amazonaws.com/dev0th-docker-repo:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+# service type loadbalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: dev0th-app
+    k8s-app: dev0th-app
+  name: dev0th-app
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: dev0th-app

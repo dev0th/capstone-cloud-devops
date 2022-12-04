@@ -85,10 +85,96 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
 ```
 
 #### Setup Jenkins Server
-* Create EC2 instance with Ubuntu Server 18.04/20.04 LTS. Make sure that SSH port 22 and Jenkins port 8080 are open for access
-* On your EC2 instance, install Java 8/Java 11 and verify your installation
+* Create EC2 instance with Ubuntu Server 20.04 LTS. Make sure that SSH port 22 and Jenkins port 8080 are open for access
+* Create IAM role with Administrator Access policy then attach to EC2 instance
+* On your EC2 instance, change host name to Jenkins
+  ``` bash
+    sudo hostnamectl set-hostname Jenkins
+    ```
+* Install Java 18, Maven and verify your installation
     ``` bash
     sudo apt-get update
-    sudo apt-get install openjdk-8-jdk
+    sudo apt-get install openjdk-18-jdk -y
     java --version
+  
+    sudo apt-get install maven -y
+    mvn --version
     ```
+* Install Jenkins and verify your installation
+    ``` bash
+    wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+    sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+    sudo apt-get update
+    sudo apt-get install jenkins -y
+    sudo systemctl status jenkins
+    ``` 
+* Configure Jenkins with GUI. Head over to the URL http://your-ec2-instance-ip:8080 and fill in the administrator password, which you can get by running
+    ``` bash
+    sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+    ``` 
+  Then, simply follow the Jenkins pop-up configuration steps to install suggested plugins and create the first admin user
+
+* Install AWS CLI version 2 and verify your installation
+    ``` bash
+    sudo apt install unzip
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    sudo unzip awscliv2.zip
+    sudo ./aws/install
+    aws --version
+    ``` 
+* Install eksctl and verify your installation
+    ``` bash
+    curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+    sudo mv /tmp/eksctl /usr/local/bin
+    eksctl version
+    ``` 
+* Install kubectl and verify your installation
+    ``` bash
+    curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
+    chmod +x ./kubectl 
+    sudo mv ./kubectl /usr/local/bin
+    which kubectl
+    kubectl version
+    ``` 
+* Install docker and verify your installation
+    ``` bash
+    sudo apt update
+    sudo apt upgrade
+    sudo apt install apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+    sudo apt update
+    sudo apt-cache policy docker-ce
+    sudo apt install docker-ce
+    sudo systemctl status docker
+    docker --version
+    ``` 
+* Configure permissions for the Jenkins user to run docker
+    ``` bash
+    sudo usermod -aG docker jenkins
+    sudo service jenkins restart
+    sudo systemctl daemon-reload
+    sudo service docker stop
+    sudo service dockder start
+    ``` 
+* Switch to Jenkins user
+    ``` bash
+    sudo su jenkins
+    ``` 
+* Create EKS Cluster with two worker nodes using eksctl
+    ``` bash
+    eksctl create cluster --name dev0th-eks --region us-west-2 --nodegroup-name dev0th-nodes --node-type t3.small --managed --nodes 1
+    ``` 
+* Create ECR repository with name example `dev0th-docker-repo`
+* Install plugin `Docker`, `Docker Pipeline`, `Kubernetes CLI`
+* Config Maven Jenkins server: Manage Jenkins -> Global Configuration -> Maven
+    ``` bash
+    Name: Maven3
+    MAVEN_HOME: /usr/share/maven
+    ```
+* Config credentials for connecting to Kubernetes Cluster using kubeconfig
+    ``` bash
+    cat /var/lib/jenkins/.kube/config
+    ```
+  Save the output to Kubeconfig file then upload to: Manage Jenkins -> Manage Credentials -> Add Credentials -> Secret file upload K8S
+* Config Docker Pipeline
