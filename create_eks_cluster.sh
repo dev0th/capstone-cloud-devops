@@ -1,0 +1,1 @@
+eksctl create cluster --name dev0th-eks --region us-west-2 --nodegroup-name dev0th-nodes --node-type t3.small --managed --nodes 1
