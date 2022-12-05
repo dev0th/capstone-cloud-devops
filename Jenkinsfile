@@ -17,10 +17,15 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
+        stage('Lint') {
+            steps {
+                sh 'hadolint Dockerfile'
+            }
+        }
         stage('Build Image') {
             steps {
                 script {
-                    docker.build registry 
+                    docker.build registry
                 }
             }
         }
@@ -37,6 +42,12 @@ pipeline {
                         sh ('kubectl apply -f eks-deploy-k8s.yaml')
                     }
                 }
+            }
+        }
+        stage("Clean up") {
+            steps {
+                echo 'Cleaning up ...'
+                sh 'docker system prune -f'
             }
         }
     }

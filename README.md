@@ -1,7 +1,7 @@
 # Deploy Springboot App using Jenkins Pipeline, Amazon ECR and Amazon EKS
 
 <div align="left">
-    <img src="screenshots/[RM01]PROJECT_DIAGRAM.png" />
+    <img src="screenshots/[RM01]PROJECT_DIAGRAM.jpeg" />
 </div>
 
 ## Project Overview
@@ -33,12 +33,10 @@ To deploy the application to Amazon EKS you also need the following tools:
     <img src="screenshots/[RM02]FILE_EXPLANATION.png" />
 </div>
 
+- `create_eks_cluster.sh`: script file to create AWS EKS cluster with eksctl
 - `Dockerfile`: text file that contains set of instructions for docker to automatically build an image for the app to be run in a container
+- `eks-deploy-k8s.yaml`: file with declarative updates to application and service that is deployed to kubernetes cluster
 - `Jenkinsfile`: text file that contains the Jenkins Pipeline configurations
-- `deployment/config.yml`: file that stores dictionary of configuration settings for the application
-- `deployment/deployment.yml`: file with declarative updates to application that is deployed to kubernetes cluster
-- `deployment/secret.yml`: file that stores and manages sensitive information for the application, such as tokens, keys and passwords
-- `deployment/service.yml`: file that defines service to be deployed to kubernetes cluster
 - `run_docker.sh`: script file to build an image from Dockerfile and run a docker container locally
 - `run_kubernetes:sh`: script file to run on Kubernetes locally with minikube
 - `upload_docker.sh`: script file to tag a local docker image and push it to docker hub
