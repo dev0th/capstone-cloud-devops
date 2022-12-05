@@ -85,38 +85,22 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
 ```
 
 #### Setup Jenkins Server
+* Create ECR repository with name example `dev0th-docker-repo`
 * Create EC2 instance with Ubuntu Server 20.04 LTS. Make sure that SSH port 22 and Jenkins port 8080 are open for access
 * Create IAM role with Administrator Access policy then attach to EC2 instance
 * On your EC2 instance, change host name to Jenkins
     ``` bash
     sudo hostnamectl set-hostname Jenkins
     ```
-* Install Java 18 and verify you installation
+* Install Java and verify you installation
     ``` bash
-    sudo wget https://download.java.net/java/GA/jdk18.0.2.1/db379da656dc47308e138f21b33976fa/1/GPL/openjdk-18.0.2.1_linux-x64_bin.tar.gz
-    sudo tar -xvf openjdk-18.0.2.1_linux-x64_bin.tar.gz  
-    sudo mv jdk-18.0.2.1 /opt/
-    
-    # sudo nano ~/.bashrc
-    JAVA_HOME='/opt/jdk-18.0.2.1'
-    PATH="$JAVA_HOME/bin:$PATH"
-    export PATH
-    # source ~/.bashrc
-  
-    java --version
-  ```
+    sudo apt update
+    sudo apt-get install default-jdk -y
+    java -version
+    ```
 * Install Maven and verify your installation
     ``` bash
-    sudo wget https://mirrors.estointernet.in/apache/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
-    sudo tar -xvf apache-maven-3.8.5-bin.tar.gz
-    sudo mv apache-maven-3.8.5 /opt/
-  
-    # sudo nano ~/.bashrc
-    M2_HOME='/opt/apache-maven-3.8.5'
-    PATH="$M2_HOME/bin:$PATH"
-    export PATH
-    # source ~/.bashrc
-  
+    sudo apt install maven -y
     mvn --version
     ```
 * Install Hadolint and verify your installation
@@ -124,7 +108,7 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
     sudo chmod +x /bin/hadolint
     # alias hadolint=/bin/hadolint
-    /bin/hadolint Dockerfile
+    hadolint Dockerfile
     ```
 * Install Jenkins and verify your installation
     ``` bash
@@ -164,19 +148,19 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     ``` 
 * Install docker and verify your installation
     ``` bash
-    sudo apt update
-    sudo apt upgrade
-    sudo apt install apt-transport-https ca-certificates curl software-properties-common
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-    sudo apt update
-    sudo apt-cache policy docker-ce
-    sudo apt install docker-ce
-    sudo systemctl status docker
-    docker --version
+    sudo apt-get update
+    sudo apt install gnupg2 pass -y
+    sudo apt install docker.io -y
+    sudo usermod -aG docker $USER
     ``` 
 * Configure permissions for the Jenkins user to run docker
     ``` bash
+    exit
+    # relogin into EC2 instance
+    sudo systemctl start docker
+    sudo systemctl enable docker
+    sudo systemctl status docker
+  
     sudo usermod -aG docker jenkins
     sudo service jenkins restart
     sudo systemctl daemon-reload
@@ -185,7 +169,7 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     ``` 
 * Switch to Jenkins user
     ``` bash
-    sudo su jenkins
+    sudo su - jenkins
     ``` 
 * Create EKS Cluster with two worker nodes using eksctl
     ``` bash
@@ -196,7 +180,6 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     cat /var/lib/jenkins/.kube/config
     ```
   Save the output to Kubeconfig file then upload to: Manage Jenkins -> Manage Credentials -> Add Credentials -> Secret file upload K8S
-* Create ECR repository with name example `dev0th-docker-repo`
 * Install plugin `Docker`, `Docker Pipeline`, `Kubernetes CLI`
 * Config Maven Jenkins server: Manage Jenkins -> Global Tool Configuration -> Maven
     ``` bash
