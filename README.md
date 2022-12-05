@@ -184,6 +184,11 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     ``` bash
     eksctl create cluster --name dev0th-eks --region us-west-2 --nodegroup-name dev0th-nodes --node-type t3.small --managed --nodes 1
     ``` 
+* Config credentials for connecting to Kubernetes Cluster using kubeconfig
+    ``` bash
+    cat /var/lib/jenkins/.kube/config
+    ```
+  Save the output to Kubeconfig file then upload to: Manage Jenkins -> Manage Credentials -> Add Credentials -> Secret file upload K8S
 * Create ECR repository with name example `dev0th-docker-repo`
 * Install plugin `Docker`, `Docker Pipeline`, `Kubernetes CLI`
 * Config Maven Jenkins server: Manage Jenkins -> Global Tool Configuration -> Maven
@@ -191,9 +196,4 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     Name: Maven3
     MAVEN_HOME: /opt/apache-maven-3.8.5
     ```
-* Config credentials for connecting to Kubernetes Cluster using kubeconfig
-    ``` bash
-    cat /var/lib/jenkins/.kube/config
-    ```
-  Save the output to Kubeconfig file then upload to: Manage Jenkins -> Manage Credentials -> Add Credentials -> Secret file upload K8S
 * Config Docker Pipeline
