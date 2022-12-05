@@ -98,8 +98,8 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     sudo mv jdk-18.0.2.1 /opt/
     
     # sudo nano ~/.bashrc
-    M2_HOME='/opt/apache-maven-3.8.5'
-    PATH="$M2_HOME/bin:$PATH"
+    JAVA_HOME='/opt/jdk-18.0.2.1'
+    PATH="$JAVA_HOME/bin:$PATH"
     export PATH
     # source ~/.bashrc
   
