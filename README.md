@@ -187,3 +187,9 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     MAVEN_HOME: /opt/apache-maven-3.8.5
     ```
 * Config Docker Pipeline
+* Verify
+    ``` bash
+    kubectl get deployment
+    kubectl get pods
+    kubectl get svc
+    ```
