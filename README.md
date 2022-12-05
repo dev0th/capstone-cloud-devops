@@ -93,7 +93,7 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     ```
 * Install Java 18 and verify you installation
     ``` bash
-    wget https://download.java.net/java/GA/jdk18.0.2.1/db379da656dc47308e138f21b33976fa/1/GPL/openjdk-18.0.2.1_linux-x64_bin.tar.gz
+    sudo wget https://download.java.net/java/GA/jdk18.0.2.1/db379da656dc47308e138f21b33976fa/1/GPL/openjdk-18.0.2.1_linux-x64_bin.tar.gz
     sudo tar -xvf openjdk-18.0.2.1_linux-x64_bin.tar.gz  
     sudo mv jdk-18.0.2.1 /opt/
     
@@ -107,7 +107,7 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
   ```
 * Install Maven and verify your installation
     ``` bash
-    wget https://mirrors.estointernet.in/apache/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
+    sudo wget https://mirrors.estointernet.in/apache/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
     sudo tar -xvf apache-maven-3.8.5-bin.tar.gz
     sudo mv apache-maven-3.8.5 /opt/
   
@@ -118,6 +118,13 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
     # source ~/.bashrc
   
     mvn --version
+    ```
+* Install Hadolint and verify your installation
+    ``` bash
+    sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
+    sudo chmod +x /bin/hadolint
+    # alias hadolint=/bin/hadolint
+    /bin/hadolint Dockerfile
     ```
 * Install Jenkins and verify your installation
     ``` bash
