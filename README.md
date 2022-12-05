@@ -182,7 +182,7 @@ To create and manage the Kubernetes cluster, it's convenient to use eksctl CLI t
 * Config Maven Jenkins server: Manage Jenkins -> Global Tool Configuration -> Maven
     ``` bash
     Name: Maven3
-    MAVEN_HOME: /opt/apache-maven-3.8.5
+    MAVEN_HOME: /usr/share/maven
     ```
 * Config Docker Pipeline
 * Verify
